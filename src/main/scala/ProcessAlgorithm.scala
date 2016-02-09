@@ -18,7 +18,7 @@ object ProcessAlgorithm {
 
     // We receive the list of events, in this case just a set of number
     // to sum and substract
-    val listEvent = List(("sumar",10),("restar", 20), ("restar", 3), ("sumar", 4))
+    val listEvent = List(("sum",10),("subs", 20), ("subs", 3), ("sum", 4), ("throw", 100))
 
     changeStatusRecursive(listEvent, person).foreach(println)
 
@@ -39,12 +39,14 @@ object ProcessAlgorithm {
     var eventList = acc._2
 
     var balance = person.balance
-    if(eventValue._1 == "sumar"){
+    if(eventValue._1 == "sum") {
       balance += eventValue._2
       eventList = eventList :+ eventValue
-    } else if (eventValue._1 == "restar" && person.balance > eventValue._2){
+    } else if (eventValue._1 == "subs" && person.balance > eventValue._2) {
       balance -= eventValue._2
       eventList = eventList :+ eventValue
+    } else if (eventValue._1 == "throw") {
+      eventList = eventList ::: changeStatusRecursive(List(("sum", 100)), person)
     }
     (Person(balance), eventList)
   }
